@@ -1,0 +1,14 @@
+{
+    "name": "markor/markor-web",
+    "description": "Markor Web - PHP Edition",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "erusev/parsedown": "^1.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Markor\\": "src/"
+        }
+    }
+}
