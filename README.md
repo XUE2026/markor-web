@@ -7,7 +7,7 @@
 
 # Markor
 <img src="/app/src/main/ic_launcher-web.png" align="left" width="128" hspace="10" vspace="10">
-<b>Text editor - Notes &amp; ToDo (for Android)</b>.
+<b>Text editor - Notes &amp; ToDo (for Android & Web)</b>.
 <br/>Simple and lightweight, supporting Markdown, todo.txt, Zim & more!<br/><br/>
 
 **Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor), [GitHub](https://github.com/gsantner/markor/releases/latest)
@@ -18,6 +18,25 @@ Markor utilizes simple markup formats like Markdown and todo.txt for note-taking
 It is versatile at working with text; it can also be used for keeping bookmarks, copying to clipboard, fast opening a link from text and lots more.
 Created files are interoperable with any other plaintext software on any platform.
 Markor is openly developed free software that accepts community contributions.
+
+## 项目分支结构 / Project Branches
+
+本项目包含多个分支，每个分支提供不同的实现方式：
+
+| 分支名称 | 语言/技术 | 说明 |
+|---------|----------|------|
+| `master` | Java/Android | 主要的 Android 应用分支 |
+| `python-web` | Python | Python Web 实现的 Markor |
+| `rust-web` | Rust | Rust Web 实现的 Markor |
+| `php-web` | PHP | PHP Web 实现的 Markor（支持文件和数据库存储） |
+| `java-web` | Java | Java Web 实现的 Markor |
+| `apk` | Java/Android | 用于配置端口和提供 Web 服务的 APK |
+
+所有 Web 分支均支持以下功能：
+- 完全可控的 Markor Web 编辑器（与原版应用一致的样式）
+- 配置仅可读/写/查看特定文件
+- 仅以预览形式查看特定文件
+- 支持更多 Markor 思维导图语法
 
 ![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-123.jpg)  
 ![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-456.jpg)  

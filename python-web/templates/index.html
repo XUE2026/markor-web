@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Markor Web - Editor{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <div class="sidebar">
+        <h3>文件列表</h3>
+        <div id="file-list">
+            <p>加载中...</p>
+        </div>
+        <button id="new-file-btn" class="btn btn-primary">新建文件</button>
+    </div>
+    <div class="editor-main">
+        <div class="editor-header">
+            <input type="text" id="current-file" placeholder="文件名" readonly>
+            <div class="mode-indicator">
+                模式: <span id="mode-display">{{ mode }}</span>
+            </div>
+        </div>
+        <div class="editor-content">
+            <div class="editor-pane">
+                <textarea id="editor" placeholder="在此输入内容..."></textarea>
+            </div>
+            <div class="preview-pane">
+                <div id="preview"></div>
+            </div>
+        </div>
+        <div class="editor-footer">
+            <button id="save-btn" class="btn btn-success">保存</button>
+            <button id="preview-toggle" class="btn btn-secondary">预览切换</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js"></script>
+{% endblock %}
