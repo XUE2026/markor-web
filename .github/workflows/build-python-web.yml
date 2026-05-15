@@ -31,26 +31,28 @@ jobs:
       run: |
         cd python-web
         python -m pip install --upgrade pip
-        pip install -r requirements.txt || true
-        pip install flask markdown pygments
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        else
+          pip install flask markdown pygments
+        fi
 
     - name: Lint with flake8
       run: |
         pip install flake8
         cd python-web
         flake8 app.py --count --select=E9,F63,F7,F82 --show-source --statistics || true
-        flake8 app.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
 
-    - name: Create release
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Build package
       run: |
-        mkdir -p dist
+        mkdir -p dist/python-web
         cd python-web
-        cp -r * ../dist/
+        cp -r . ../dist/python-web/
+        ls -la ../dist/python-web/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: python-web
-        path: dist
+        name: python-web-py${{ matrix.python-version }}
+        path: dist/python-web
         retention-days: 14

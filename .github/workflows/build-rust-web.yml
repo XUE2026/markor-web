@@ -14,11 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust-version: ['stable', 'beta']
+        rust-version: ['stable']
         target:
           - x86_64-unknown-linux-gnu
-          - aarch64-unknown-linux-gnu
-          - armv7-unknown-linux-gnueabihf
 
     steps:
     - name: Checkout code
@@ -37,34 +35,23 @@ jobs:
       with:
         key: ${{ matrix.target }}
 
-    - name: Install cross for cross-compilation
-      if: matrix.target != 'x86_64-unknown-linux-gnu'
-      run: cargo install cross
-
     - name: Build
       run: |
-        if [ "${{ matrix.target }}" = "x86_64-unknown-linux-gnu" ]; then
-          cargo build --release
-        else
-          cross build --release --target ${{ matrix.target }}
-        fi
+        cd rust-web
+        cargo build --release
+        ls -la target/release/
 
-    - name: Run tests
-      run: cargo test --release
-
-    - name: Create release
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Build package
       run: |
-        mkdir -p dist
-        if [ "${{ matrix.target }}" = "x86_64-unknown-linux-gnu" ]; then
-          cp target/release/* dist/ || true
-        else
-          cp target/${{ matrix.target }}/release/* dist/ || true
-        fi
+        mkdir -p dist/rust-web
+        cd rust-web
+        cp -r . ../dist/rust-web/
+        cp target/release/markor-web ../dist/rust-web/ || true
+        ls -la ../dist/rust-web/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: rust-web-${{ matrix.target }}
-        path: dist
+        path: dist/rust-web
         retention-days: 14

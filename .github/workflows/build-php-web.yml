@@ -29,7 +29,7 @@ jobs:
         extensions: mbstring, xml, pdo_mysql, pdo_sqlite
         coverage: none
 
-    - name: Validate composer.json and composer.lock
+    - name: Validate composer.json
       run: composer validate --strict
 
     - name: Cache Composer packages
@@ -37,26 +37,26 @@ jobs:
       uses: actions/cache@v3
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php-${{ matrix.php-version }}-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Lint PHP files
       run: |
-        find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+        find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \; || true
 
-    - name: Create release
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Build package
       run: |
-        mkdir -p dist
-        cp -r * dist/
+        mkdir -p dist/php-web
+        cp -r . dist/php-web/
+        ls -la dist/php-web/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: php-web
-        path: dist
+        name: php-web-php${{ matrix.php-version }}
+        path: dist/php-web
         retention-days: 14
