@@ -19,8 +19,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ref: python-web
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
