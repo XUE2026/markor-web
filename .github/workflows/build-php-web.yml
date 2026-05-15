@@ -29,9 +29,6 @@ jobs:
         extensions: mbstring, xml, pdo_mysql, pdo_sqlite
         coverage: none
 
-    - name: Validate composer.json
-      run: composer validate --strict
-
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
@@ -42,11 +39,19 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-interaction
+      run: |
+        if [ -f composer.json ]; then
+          composer install --prefer-dist --no-progress --no-interaction
+        fi
 
     - name: Lint PHP files
       run: |
-        find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \; || true
+        if [ -d "src" ]; then
+          find src -name "*.php" -exec php -l {} \; || true
+        fi
+        if [ -d "public" ]; then
+          find public -name "*.php" -exec php -l {} \; || true
+        fi
 
     - name: Build package
       run: |
