@@ -27,26 +27,19 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd python-web
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-        else
-          pip install flask markdown pygments
-        fi
+        pip install -r requirements.txt || pip install flask markdown pygments python-dotenv
 
     - name: Lint with flake8
       run: |
         pip install flake8
-        cd python-web
         flake8 app.py --count --select=E9,F63,F7,F82 --show-source --statistics || true
 
     - name: Build package
       run: |
         mkdir -p dist/python-web
-        cd python-web
-        cp -r . ../dist/python-web/
-        ls -la ../dist/python-web/
+        cp -r . dist/python-web/
+        ls -la dist/python-web/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
