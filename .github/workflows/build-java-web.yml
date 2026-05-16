@@ -19,8 +19,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ref: java-web
 
     - name: Set up Java ${{ matrix.java-version }}
       uses: actions/setup-java@v4
