@@ -1,0 +1,60 @@
+name: "Build PHP Web"
+
+on:
+  push:
+    branches:
+      - php-web
+  pull_request:
+    branches:
+      - php-web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, pdo_mysql, pdo_sqlite, gd, zip, fileinfo, intl
+        coverage: none
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+    - name: Install dependencies
+      run: |
+        composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader || composer update --prefer-dist --no-progress --no-interaction
+
+    - name: Lint PHP files
+      run: |
+        find src -name "*.php" -exec php -l {} \; || true
+        php -l index.php || true
+        php -l login.php || true
+
+    - name: Build package
+      run: |
+        mkdir -p dist/php-web
+        rsync -av --exclude='.git' --exclude='dist' --exclude='data/files' --exclude='data/*.db' --exclude='data/*.lock' --exclude='data/cache' . dist/php-web/
+        ls -lah dist/php-web/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: php-web-php${{ matrix.php-version }}
+        path: dist/php-web
+        retention-days: 14

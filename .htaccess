@@ -1,0 +1,33 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+<FilesMatch "\.(sqlite|db|lock|log)$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(config\.php|composer\.(json|lock))$">
+    Require all denied
+</FilesMatch>
+
+Options -Indexes
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "same-origin"
+</IfModule>
+
+<LimitExcept GET POST HEAD>
+    Require all denied
+</LimitExcept>
+
+php_value upload_max_filesize 100M
+php_value post_max_size 105M
+php_value max_execution_time 300
+php_value memory_limit 256M
+php_value session.cookie_httponly 1
+php_value session.cookie_samesite "Lax"
+php_value session.use_strict_mode 1
